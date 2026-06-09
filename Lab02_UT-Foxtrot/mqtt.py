@@ -88,6 +88,7 @@ class ClienteMQTT:
         payload = {
             "id_unidade": self.id_unidade,
             "chave_publica_rsa": pub_para_b64(self.rsa_pub),
+            "chave_publica_ecdsa": pub_para_b64(self.ecdsa_pub),
             "chave_publica_eddsa": pub_para_b64(self.ecdsa_pub)
         }
         topico = TOPIC_CHAVES.format(id=self.id_unidade)
@@ -101,7 +102,9 @@ class ClienteMQTT:
                 return
             if id_ut in self.unidades_revogadas:
                 return
-            self.gerenciador.atualizar(id_ut, dados["chave_publica_rsa"], dados["chave_publica_eddsa"])
+            chave_ecdsa = dados.get("chave_publica_ecdsa") or dados.get("chave_publica_eddsa")
+            if chave_ecdsa:
+                self.gerenciador.atualizar(id_ut, dados["chave_publica_rsa"], chave_ecdsa)
         except Exception:
             pass
 
@@ -129,6 +132,15 @@ class ClienteMQTT:
     def _enviar_echo_oraculo(self):
         payload = {"id_unidade": self.id_unidade, "cmd": "echo"}
         self._client.publish(TOPIC_ORACULO, json.dumps(payload))
+        return True
+
+    def solicitar_desafio_oraculo(self):
+        if not self.conectado:
+            print("Erro: Não conectado ao broker MQTT.")
+            return False
+        payload = {"id_unidade": self.id_unidade, "cmd": "desafio"}
+        self._client.publish(TOPIC_ORACULO, json.dumps(payload))
+        print("Solicitação de desafio enviada ao Oráculo!")
         return True
 
     def _processar_mensagem_segura(self, payload_str):

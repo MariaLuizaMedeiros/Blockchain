@@ -55,7 +55,8 @@ def loop(cliente, gerenciador):
         print("3. Revogar unidade")
         print("4. Status da conexão")
         print("5. Enviar echo para o oráculo")
-        print("6. Sair")
+        print("6. Solicitar desafio ao oráculo")
+        print("7. Sair")
         opcao = input("Escolha uma opção: ").strip()
         
         if opcao == "1":
@@ -96,6 +97,9 @@ def loop(cliente, gerenciador):
             cliente.enviar_mensagem("oraculo", "hello")
         
         elif opcao == "6":
+            cliente.solicitar_desafio_oraculo()
+        
+        elif opcao == "7":
             print("Encerrando...")
             break
         
