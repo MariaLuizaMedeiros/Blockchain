@@ -229,3 +229,24 @@ class ClienteMQTT:
         if unidade_revogada:
             self.unidades_revogadas.add(unidade_revogada)
             self.gerenciador.revogar(unidade_revogada)
+
+    def publicar_resposta_oraculo(self, conteudo):
+        """Publica um pacote seguro para o oráculo contendo cmd:'resposta'."""
+        if not self.conectado:
+            return False
+        info_oraculo = self.gerenciador.obter("oraculo")
+        if not info_oraculo:
+            return False
+        try:
+            rsa_pub_oraculo = load_rsa_pub_key(info_oraculo["chave_publica_rsa"])
+            plaintext = conteudo.encode("utf-8")
+            pacote = montar_pacote_seguro(plaintext, self.id_unidade, rsa_pub_oraculo, self.ecdsa_priv)
+            pacote["cmd"] = "resposta"
+            try:
+                salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(pacote))
+            except Exception:
+                pass
+            self._client.publish(TOPIC_ORACULO, json.dumps(pacote))
+            return True
+        except Exception:
+            return False

@@ -56,7 +56,8 @@ def loop(cliente, gerenciador):
         print("4. Status da conexão")
         print("5. Enviar echo para o oráculo")
         print("6. Solicitar desafio ao oráculo")
-        print("7. Sair")
+        print("7. Publicar resposta ao oráculo")
+        print("8. Sair")
         opcao = input("Escolha uma opção: ").strip()
         
         if opcao == "1":
@@ -100,6 +101,14 @@ def loop(cliente, gerenciador):
             cliente.solicitar_desafio_oraculo()
         
         elif opcao == "7":
+            conteudo = input("Conteúdo da resposta ao oráculo: ").strip()
+            if not conteudo:
+                print("Conteúdo não pode ser vazio.")
+                continue
+            ok = cliente.publicar_resposta_oraculo(conteudo)
+            print("Resposta enviada." if ok else "Falha ao enviar resposta.")
+        
+        elif opcao == "8":
             print("Encerrando...")
             break
         
