@@ -20,9 +20,8 @@ def carregar_config(caminho="config.json"):
     if os.path.exists(caminho):
         with open(caminho) as f:
             return json.load(f)
-    with open(caminho, "w") as f:
-        json.dump(CONFIG_PADRAO, f, indent=2)
-    return dict(CONFIG_PADRAO)
+    print(f"Arquivo de configuração '{caminho}' não encontrado.")
+    exit(1)
 
 def salvar_config(config, caminho="config.json"):
     with open(caminho, "w") as f:

@@ -1,14 +1,31 @@
 import json
 import time
+import os
+from datetime import datetime
 import paho.mqtt.client as mqtt
 from chaves import load_rsa_pub_key, pub_para_b64
 from chaveiro import *
 from empacotador import *
 
+LOG_DIR = "logs"
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
 TOPIC_CHAVES = "sisdef/broadcast/chaves/{id}"
 TOPIC_DIRETO = "sisdef/direto/{id}"
 TOPIC_REVOGACAO = "sisdef/broadcast/revogacao"
 TOPIC_ORACULO = "sisdef/direto/oraculo"
+
+def salvar_mensagem_log(topico, mensagem):
+    try:
+        arquivo_log = os.path.join(LOG_DIR, "todas_mensagens.txt")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        with open(arquivo_log, "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] Tópico: {topico}\n")
+            f.write(f"Mensagem: {mensagem}\n")
+            f.write("-" * 80 + "\n")
+    except Exception as e:
+        print(f"Erro ao salvar mensagem no log: {str(e)}")
 
 class ClienteMQTT:
     def __init__(self, id_unidade, rsa_priv, rsa_pub, ecdsa_priv, ecdsa_pub, gerenciador, unidades_revogadas, config):
@@ -52,6 +69,7 @@ class ClienteMQTT:
         try:
             topico = msg.topic
             mensagem = msg.payload.decode()
+            salvar_mensagem_log(topico, mensagem)
             if topico.startswith("sisdef/broadcast/chaves/"):
                 self._processar_chave_iff(topico, mensagem)
             elif topico == TOPIC_REVOGACAO:
