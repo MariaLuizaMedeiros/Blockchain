@@ -7,6 +7,23 @@ from chaves import load_rsa_pub_key, pub_para_b64
 from chaveiro import *
 from empacotador import *
 
+# pasta de logs para mensagens recebidas/enviadas
+LOG_DIR = "logs"
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+def salvar_mensagem_enviada(topico, mensagem):
+    """Registra em arquivo todas as mensagens que este cliente envia."""
+    try:
+        arquivo = os.path.join(LOG_DIR, "enviadas_mensagens.txt")
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        with open(arquivo, "a", encoding="utf-8") as f:
+            f.write(f"[{ts}] Tópico: {topico}\n")
+            f.write(f"Mensagem: {mensagem}\n")
+            f.write("-" * 80 + "\n")
+    except Exception:
+        pass
+
 LOG_DIR = "logs"
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
@@ -92,6 +109,11 @@ class ClienteMQTT:
             "chave_publica_eddsa": pub_para_b64(self.ecdsa_pub)
         }
         topico = TOPIC_CHAVES.format(id=self.id_unidade)
+        # registrar mensagem enviada
+        try:
+            salvar_mensagem_enviada(topico, json.dumps(payload))
+        except Exception:
+            pass
         self._client.publish(topico, json.dumps(payload), retain=True)
 
     def _processar_chave_iff(self, topico, payload_str):
@@ -124,6 +146,10 @@ class ClienteMQTT:
             plaintext = conteudo.encode("utf-8")
             pacote = montar_pacote_seguro(plaintext, self.id_unidade, rsa_pub_dest, self.ecdsa_priv)
             topico = TOPIC_DIRETO.format(id=dest_id)
+            try:
+                salvar_mensagem_enviada(topico, json.dumps(pacote))
+            except Exception:
+                pass
             self._client.publish(topico, json.dumps(pacote))
             return True
         except Exception:
@@ -131,6 +157,10 @@ class ClienteMQTT:
 
     def _enviar_echo_oraculo(self):
         payload = {"id_unidade": self.id_unidade, "cmd": "echo"}
+        try:
+            salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
+        except Exception:
+            pass
         self._client.publish(TOPIC_ORACULO, json.dumps(payload))
         return True
 
@@ -139,6 +169,10 @@ class ClienteMQTT:
             print("Erro: Não conectado ao broker MQTT.")
             return False
         payload = {"id_unidade": self.id_unidade, "cmd": "desafio"}
+        try:
+            salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
+        except Exception:
+            pass
         self._client.publish(TOPIC_ORACULO, json.dumps(payload))
         print("Solicitação de desafio enviada ao Oráculo!")
         return True
@@ -164,6 +198,10 @@ class ClienteMQTT:
         try:
             rsa_pub_oraculo = load_rsa_pub_key(info_oraculo["chave_publica_rsa"])
             pacote = montar_pacote_seguro(motivo.encode("utf-8"), self.id_unidade, rsa_pub_oraculo, self.ecdsa_priv)
+            try:
+                salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(pacote))
+            except Exception:
+                pass
             self._client.publish(TOPIC_ORACULO, json.dumps(pacote))
         except Exception:
             pass
@@ -173,6 +211,10 @@ class ClienteMQTT:
             return False
         try:
             pacote = montar_pacote_revogacao(unidade, self.id_unidade, self.ecdsa_priv)
+            try:
+                salvar_mensagem_enviada(TOPIC_REVOGACAO, json.dumps(pacote))
+            except Exception:
+                pass
             self._client.publish(TOPIC_REVOGACAO, json.dumps(pacote))
             return True
         except Exception:

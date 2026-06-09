@@ -2,46 +2,56 @@
   "oraculo": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0JYEsxupPYOio+u8xHdzSNLQgQoPwFx/qceHQJPy2KzNSCXz3FFyKkXaso4UTorzy8XXDv5WkRC1AlDDVu28ANXlrZqLyjLZ8DdplHig2KSxYV5MXA5TyqMDeCAW5CWi+na5Xwr9IbtuTfCv65YeB3QRgZWjZ4oVxpGVek+4dec0qChNl6pL9KmgI4u5CHHC8d7z6MovK0+eN0aMIT2bWgri29tT9sDCoHEGaab1576+SXK3iDXlLkeehJ/h72lqu3HmSL/B5ZE+pKLVLJogSwwMCTejrfTXf5acj9EOq83wGNLTjHIKr2iMz+SZzFS4vxk6qMgltCXjBZfXalzLnwIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfmgdDET1IKOR2OxLI9KBBzFB97GyrJKipAuwSrMhDn1w93ieoCb7etbYX5/wrUic9xX5LQbUdgyKSRuCnTPAeQ==",
-    "ultima_atualizacao": "2026-06-09T20:36:26Z"
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-mike": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkE2iYNVkgMCxojY5H3xNFlg7udRtOagobkWtpt4eN3Z/mNGh6ZJQL9dBy2Z9Po6wwxN+J4+eKgCFWvs9NCXAxHSzzBvXZjQZgwhasAn04Etbj4yVeBbS3LQZbXlkx6sazwdpq5yzPRAQrObvUYpP6BRiQi0HoFx8VvSq3q244wHdLjcauAWIuzGYhprmkz5EjT1ZPwZardWXRw2tXWASNbS9MU8yasski58wcJPkHc1nPGcJROmYSalslKOJSnPMOYz679hxpQeclhYusQWS7M7Mx40aeOa6uIRSF39wgLVDQM45fk3hEVwWx+bazy+rCAPkbnbwoWSVcrLwQfDs/wIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElocgkCwz2ZMfGgtXUofrrQ8BIYxUee12one/o5CQ9S1eaq5TUwFP7FRH9kXOkX+eyRGZVuyHhIfE0ZkjZFK99g==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-charlie": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6lhBtT6MAWwOu+VPjbg0J4R0dxNmV1MmdCYbxJBvc3VCuaBaHyZ2UvbbhxUcNsW5wIDxDhj15jYKKSpQIda37EYLIir3aPQ9HuUOaAKwOXIWV1qWfj9h2k+BG87JZU0JWhZA6QeZm8BDy6jJ10dd0JDK8PfqpM8Jufb2AEWuTDGTT3jvabGLkSoOaY8SinfHBRWZFMKtFIeysvvb1oCUYohvJe5Crbi4h4AuA5mQ2qImgxZCzUOlujeuvfzA8E5AIi1NghriJruSFjEeNYAASUumC0AsCssKaoTgqy1N0rL9n4DZO75995yZWduXs4CUl8cCeoGcP5jnnS+OIxOQqQIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMhu9sVNg0WcN2w0EpYxrgsJ2aqsX1hx/7ddF3BFNkl2yBjRuT00cvk3ob0tmThLIJ+/RyhfaMIxbWqAf2pZ4Vw==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-november": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5oFeQKRR2Uq7T9htBx/Snv0rhCgG8B0Qu5/MBkwXhhFRAzzZN9jByaXWMgaltBwZC6k0EDKqA9HXczeCO0KLAdqi/C0VXdNdWkvl6IIn6ZK5amEMIew3OlLdqUp2imNzs7rIiyMfOhk6/8r9NtQleuFLuqxsQuGFbdBexkH1XNLDsTiW1aMVV4jRYfATSrp5731x0dlZjb1s4azkrCoBPwvcNWgLdJKGuy6RmsS91MXll4ShY7Ys0qiTFHHNrFkAVosN7DVRo9+SrbBgtGFsfYueC/uYcUQMxIS4Rn5s1y0Lm9v9SFsPygnfEZ51iV+zERxGZLouIqR/fEx0kaZWFwIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHzfroNwxXgTxElYwYyzEWTHhnKwUdIWqXbWM4Mfqe9QGwX/SUhi784kkUlxqQ07pg8m6cXu3BpHOm2SsVl0TdQ==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-juliet": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAugZuKLgmvG0vc10gTNjTNhoE9A/wbfMA1suPqnXBXSEQPQm5CFEG4kA/ZAZ8WSIHrpl4LqTK8khW+jFDMAtbXNiO1vcHIQwcXERv8DTFtIUfw9L8wEM79vS9Lg5yvAw45ZjzNsgZzEbJJmDgydtpV1cgVORfFDN9aHETPwVOlmI06/ST2cTp8h2TyNE4bfn3c+ragu0Xoipze5yPLX3Jocm/WNaLO5MrWA93p+tAc0Zom7g6IINRo4MJzeRyqfTuJIzYMQttWnUjJqK3lOQ0up9FpFD1hjvlNz/I5ob4HvdJWD6UbzB6Jy1MCaLRVR8ozvftJei7sAxCmPCabAkdYQIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAECw7oZzebRDs9KvnHkn/ou1SWBAcyBc53oK89wx/yMnv9jc0d/sA4M30OHKqqiW/hCw7bVlvdBqxR1+bg9onpDg==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "ultima_atualizacao": "2026-06-09T21:54:36Z"
   },
   "ut-zulu": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArBYxyR0UZaRA3UdTcg3hwZVp1HGDDOG1W4kWJq/crigoD+OAqCPseRr2rj0K25TBvpEH9i9q/XEtD1DiYSdb9oOQj000il4j5rc6ZLY+l+J1snLXWExwZFWvAjLFNaaOZCcZ+z0d/nF20/6vVIu7AOqxWlzYACLRUaF6VFSdks89yXGJANmhpoMe8KA5KRpNdL7tKm+wucRigMGmY6bDEObttOd+N1fm3n6Csk9Q5padhzG7pRGS1ugJF8Gvt/OzqwfaBnZVlT4+gLIDGYl5jNClakXR9k8sYnT/5rUn9HyOBIW4m6OUWhdB4O1WhNlruODegby7KK/uxj3sl+X6sQIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE+oP8z0BwfmiWD3vwZ6psL9iMUFTbXuBjRMP7xGAcwi09ssc8zrcum2C/5eH0EcQ5VSgorVWmyK8kj/BYKKY3eA==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-teste": {
     "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyT/aPmSwpJegCYmukeT2MbZ6HhBq0z/bmhjuaGHJsh1Qgq6qXCPYln5TgMuflS6iEiQud89a4UhMyNWqmSCv9WftZYpRWxXttV2dCroZ5TIpwdNmR3QHHEnXE5I9dKdMmPmkVedtYx3muzeOGsZ9j/9bt487QtjYWu0zO4CfdvQI8fNx1jIW+17/4awQZkNqqPirdVvshuqrpiWmSwN5/8XJrQzrx5v5OHB75lxmrnafAObJ/P14Kpj54wBLBhzzmt07Y/7+zhUOg6pyDRFOzvNe6zOpRUHpQW1zTvbXMkMcNI/yfvTRCwFLV/MXTgnM83h6wyVds8+XoQ3tVUNEcwIDAQAB",
     "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEK2R/BQSWLpHd+z0bzj9ZEnX7+GMHiDICkJEhk2c1zCoN3lIDU71hMSdSO97/tAFf9O7jNkoEU68j3GjphgjI6A==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-bravo": {
-    "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAos/sQjqPWPkURmr4xJduiasTQ/oSkxZfEgW9iNHDM2ySOHhD93XCKps/nKJ0Q5Nrfw7UaUaexKnS6swIBy4DF+CvR+fux6HLXNGn0NhpdQnYjamTyG+Qamqzt3MFPxbZDOR+xOEOd3+G4NL3ZUH3QywqhT26PgnZOmSsXR2/OBvCx6xIniReCs95BomBF/dR2nAJVoIwx+FAl3u35wngWO1UL9AGRdu0W8F4uAVOts57wNB2J37R8MnjsuWdLzhjhfI+aaWnDZjcX8oBHkwT+3R9Z2jSMzkDAxBvmKqgDVDXH22DRBRZjGUl2zoerEJvkb4M0jas3zNB/LaCQY7hdwIDAQAB",
-    "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExiJKDidRD9J2TYJ5extlQkQcxctmdhQHDQtp+t4oS12kNcZMUpcHfNplHiI0OYe3fm+7QNqOo6cuw8lir9/GBg==",
-    "ultima_atualizacao": "2026-06-09T20:36:31Z"
+    "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5/K0JpQ0l2unb22lzSlzmHIx1mkTZxMlQ0vP1JQf47nH+gfQuWearAAlPJtA2WamGv9ddLD/HMmylX2x53tFC2lvOwBvENLc4l3u9VqTSa2UNWmS9dW+DSqfokIKYI8drLGYdo3M0qm5Fwivb8I4N5MjpmU+90suwDzlYC7ZFrTwsUAeQNojpR95xAgr+rmWnMyMkcPklis91/zS3g4Ta2OclVpcyN7kRTCoLNz40pSl4ZjYl5vPH2EfuctN/AtQsDa9aCrsSQwExKHgLHeVQ5VewFrJPz8iSH4o/MAs9areH40VoSCrWSUh7lJMaALtgLWBJpFknISHuv79DYj/5QIDAQAB",
+    "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHN8HVenV54c2XfX/tDtb0yv6HG1CqUk/i0+mS8gXy2x6HmncZJfa0D2y7KaplWWxtHYHaqvbgqymgVKRpmcdsA==",
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   },
   "ut-golf": {
-    "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1J5CxIYGGgUuhyP1yyRYMIFSghXzOY8v4Im2d564L8jsMxQEu+0VcOmXk8w4O8DTKasdvQDa3bwSFg045bqM4XyxbAX359B0fCB57W4Lki64fSGMC1306Z3smvb4FyowjkhlX6fjh63FrTA0QLFrQl840lBV/TEc20bcq2HO5s1QAdJmWYhU82B5PHrcXy61FdlfWF3TX1lRHw24Ddr0TYPAsjI3HK8GtdFvXPgcXdeXG6hbZeK9d8VgMppoMmXN24e2ZZ5r0RTfRp7lYwsxeRHBVesdNy2mD/75vBPWqvxBl4tKFfulkN4VmMVuh2qxChrZKDmG4qvQ9WZilFmAawIDAQAB",
-    "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEbXGMrXpQZfsY5S/VpCuWBk1VDgROp4lbVx6lPsChUwiWJFgpGtUPS25g8erMBeHs0UC4+9qrAePNhuFN9zZpyA==",
-    "ultima_atualizacao": "2026-06-09T00:17:49Z"
+    "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuKX3E1Xd7BxuusMHvajBuKMvLYoaV/PUE8Ee5U5zZyUHvQGhf9t+jur765C4ffgxX2smqkmVxUVBUcM6dMDPpoIpkOLqD9Poqa1fi5q8yOfC7Ky1Py1OOrCxLW1Z+8GZFoNJWW7YhpUInZD+3s7dt1rpCe2Ic/Y2UyyY5hVo/KJV2DfuVdtI5GWE0mqWIPjhpR0RDDRFCGIU7lHs6jgDw2H5jA+ZfCQyTEj4OBjxwASjK/I6OgaJiTO2qawM0Lau611pGpt5zdb3DwfQcZaFEhPcw0au9fUCB+IVBeUCOktwKJoME0oMcXjJpiw7Ph+goT91TmRaeVRQaoSHOyz8QwIDAQAB",
+    "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfR79/DCyvbFGnN5ldmMQl5G6ZF+i6ULaL+dGcW29CrRTQOhBtQG/EsneW8aJnjvBIhRrXia9U839edBy7fNbxA==",
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
+  },
+  "ut-delta": {
+    "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArXrIfEi83IOdetVyDakwU9PFFMdij/wSctRDK5HoE8uX+28W21KmmCtPPOMWZ96D6lmwdXWITvxmnoydSCWCGPf1GGb8Srf26C43IQozcLyvUxlfv4Z2lAhjFRk0Yv6REwHt03NEGtmJ+kV3ArUCtV0rMe/1el3BQejzk2gEuk2GHulZyDtGqpdZ3dPm3d75jVrPL8DPYMdGy3lmF7eU8d0aBS2cCXqt6kv5IcdA6PsFdKBKC4JfcgqRj1X9o8HVikOi+yjsbdBniNDNLoCK1f6pjHMf46hKI+YAwJ0kdT7BM7W/cXUzUYardlUK5I1uW8/faEv3ndGZX+VxGJuLBwIDAQAB",
+    "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERnIBgLhbvNDBao124Io3bH6Dubjq/KVJb6awskBUr3trq7qIwF7xK7eHEJ2MWz5jLtA8k2ohujtECPhKvlwM+Q==",
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
+  },
+  "ut-echo": {
+    "chave_publica_rsa": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp7VjmVDFekFe5BM+LPJXwW19bMeWhfKfKGj21rUZEzsgGw5S0faJo8MmnLToCSrgOXc4qguldUl1YT+4/m2gdhtVDCcrBYBnfmt0YjYtyVbDrYN2eR82fUa9Ui7M2xGIqdR6dP9ecEYzc4iCNrxk/eeXz3X2z4PulJD4YSmIC9R/3VZR9Yq06qzAf3G2xrXOYlbCtNBoAIZIECBH70eXbSrGbL2VpdkgWZDnD8Nam/1IbTcxpHOxYEphteV3iW+okJx2SldalGmllMlJD6N+T/LkzzOaAspQfT79yD9W0DGwrYpv71bT8uMQkA+subjDh/dKJ61/04fpihkyIZ8OQQIDAQAB",
+    "chave_publica_ecdsa": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfFkPA+FwEXZAQs8aM6jx36Sgp77ptzlUI6bl0o1kkDNbSrg2o3zuRwCdhfL63aRVHi22LxQCgZ1qqU/Sjcj2lQ==",
+    "ultima_atualizacao": "2026-06-09T21:50:28Z"
   }
 }
