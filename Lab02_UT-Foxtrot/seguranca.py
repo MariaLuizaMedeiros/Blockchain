@@ -25,19 +25,19 @@ def _format_security_entry(level, message):
     return f"[{_timestamp()}] {level} {message}\n"
 
 
-def info(message):
+def log_info(message):
     _append_to_file(SECURITY_LOG, _format_security_entry("INFO", message))
 
 
-def warning(message):
+def log_warning(message):
     _append_to_file(SECURITY_LOG, _format_security_entry("WARNING", message))
 
 
-def error(message):
+def log_error(message):
     _append_to_file(SECURITY_LOG, _format_security_entry("ERROR", message))
 
 
-def operacao(nome, resultado="OK", detalhes=None):
+def log_operacao(nome, resultado="OK", detalhes=None):
     if detalhes:
         mensagem = f"{nome} | {resultado} | {detalhes}"
     else:

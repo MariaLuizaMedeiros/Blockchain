@@ -2,7 +2,7 @@ import json
 import os
 import threading
 from datetime import datetime, timezone
-from seguranca import operacao as log_operacao, warning as log_warning
+from seguranca import log_operacao, log_warning
 
 class Chaveiro:
     def __init__(self, arquivo):

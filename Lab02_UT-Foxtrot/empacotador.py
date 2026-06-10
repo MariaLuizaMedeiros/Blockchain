@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 
 from chaves import *
 from cripto import *
-from seguranca import operacao as log_operacao, warning as log_warning, error as log_error
+from seguranca import log_operacao, log_warning, log_error
 
 def montar_pacote_seguro(plaintext, id_unidade, rsa_pub_destino, ecdsa_priv_remetente):
     assinatura = ecdsa_assinar(plaintext, ecdsa_priv_remetente)
