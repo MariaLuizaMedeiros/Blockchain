@@ -81,6 +81,7 @@ class ClienteMQTT:
             client.subscribe("sisdef/broadcast/chaves/+")
             client.subscribe(topico_direto)
             client.subscribe(TOPIC_REVOGACAO)
+            client.subscribe("sisdef/broadcast/notas")
 
     def _on_message(self, client, userdata, msg):
         try:
@@ -120,7 +121,7 @@ class ClienteMQTT:
         try:
             dados = json.loads(payload_str)
             id_ut = dados.get("id_unidade", "").lower()
-            if not id_ut or id_ut == self.id_unidade:
+            if not id_ut:
                 return
             if id_ut in self.unidades_revogadas:
                 return
@@ -250,3 +251,16 @@ class ClienteMQTT:
             return True
         except Exception:
             return False
+        
+    def atualizar_notas_oraculo(self):
+        if not self.conectado:
+            print("Erro: Não conectado ao broker MQTT.")
+            return False
+        payload = {"cmd": "atualizar_notas"}
+        try:
+            salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
+        except Exception:
+            pass
+        self._client.publish(TOPIC_ORACULO, json.dumps(payload), retain=False)
+        print("Solicitação de atualização de notas enviada ao Oráculo!")
+        return True

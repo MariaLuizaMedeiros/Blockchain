@@ -5,14 +5,6 @@ from chaves import *
 from chaveiro import *
 from mqtt import ClienteMQTT
 
-CONFIG_PADRAO = {
-    "mqtt_broker": "broker.hivemq.com",
-    "mqtt_port": 1883,
-    "id_unidade": "ut-foxtrot",
-    "arquivo_chaves": "chaves_confia.json",
-    "minhas_chaves": {"rsa_publica": "", "rsa_privada": "", "ecdsa_publica": "", "ecdsa_privada": ""}
-}
-
 ORACULO_RSA_PUB = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0JYEsxupPYOio+u8xHdzSNLQgQoPwFx/qceHQJPy2KzNSCXz3FFyKkXaso4UTorzy8XXDv5WkRC1AlDDVu28ANXlrZqLyjLZ8DdplHig2KSxYV5MXA5TyqMDeCAW5CWi+na5Xwr9IbtuTfCv65YeB3QRgZWjZ4oVxpGVek+4dec0qChNl6pL9KmgI4u5CHHC8d7z6MovK0+eN0aMIT2bWgri29tT9sDCoHEGaab1576+SXK3iDXlLkeehJ/h72lqu3HmSL/B5ZE+pKLVLJogSwwMCTejrfTXf5acj9EOq83wGNLTjHIKr2iMz+SZzFS4vxk6qMgltCXjBZfXalzLnwIDAQAB"
 ORACULO_ECDSA_PUB = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfmgdDET1IKOR2OxLI9KBBzFB97GyrJKipAuwSrMhDn1w93ieoCb7etbYX5/wrUic9xX5LQbUdgyKSRuCnTPAeQ=="
 
@@ -57,7 +49,8 @@ def loop(cliente, gerenciador):
         print("5. Enviar echo para o oráculo")
         print("6. Solicitar desafio ao oráculo")
         print("7. Publicar resposta ao oráculo")
-        print("8. Sair")
+        print("8. Atualizar notas")
+        print("9. Sair")
         opcao = input("Escolha uma opção: ").strip()
         
         if opcao == "1":
@@ -109,6 +102,9 @@ def loop(cliente, gerenciador):
             print("Resposta enviada." if ok else "Falha ao enviar resposta.")
         
         elif opcao == "8":
+            cliente.atualizar_notas_oraculo()
+
+        elif opcao == "9":
             print("Encerrando...")
             break
         
