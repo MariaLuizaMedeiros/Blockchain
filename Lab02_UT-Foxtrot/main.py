@@ -12,32 +12,18 @@ def carregar_config(caminho="config.json"):
     if os.path.exists(caminho):
         with open(caminho) as f:
             return json.load(f)
-    print(f"Arquivo de configuração '{caminho}' não encontrado.")
-    exit(1)
+    raise FileNotFoundError(f"Arquivo de configuração '{caminho}' não encontrado.")
 
-def salvar_config(config, caminho="config.json"):
-    with open(caminho, "w") as f:
-        json.dump(config, f, indent=2)
-
-def inicializar_chaves(config, caminho_config="config.json"):
+def inicializar_chaves(config):
     minhas = config.get("minhas_chaves", {})
-    if minhas.get("rsa_privada") and minhas.get("ecdsa_privada"):
-        rsa_priv = carregar_priv_b64(minhas["rsa_privada"])
-        rsa_pub = rsa_priv.public_key()
-        ecdsa_priv = carregar_priv_b64(minhas["ecdsa_privada"])
-        ecdsa_pub = ecdsa_priv.public_key()
-    else:
-        rsa_priv, rsa_pub = gerar_rsa()
-        ecdsa_priv, ecdsa_pub = gerar_ecdsa()
-        rsa_exp = export_keys_as_string(rsa_priv, rsa_pub)
-        ecdsa_exp = export_keys_as_string(ecdsa_priv, ecdsa_pub)
-        config["minhas_chaves"] = {
-            "rsa_publica": rsa_exp["public_key"],
-            "rsa_privada": rsa_exp["private_key"],
-            "ecdsa_publica": ecdsa_exp["public_key"],
-            "ecdsa_privada": ecdsa_exp["private_key"]
-        }
-        salvar_config(config, caminho_config)
+    if minhas == {}:
+        raise KeyError("As chaves não foram encontradas. É necessário regerá-las.")
+    
+    rsa_priv = carregar_priv_b64(minhas["rsa_privada"])
+    rsa_pub = rsa_priv.public_key()
+    ecdsa_priv = carregar_priv_b64(minhas["ecdsa_privada"])
+    ecdsa_pub = ecdsa_priv.public_key()
+
     return rsa_priv, rsa_pub, ecdsa_priv, ecdsa_pub
 
 def loop(cliente, gerenciador):
@@ -115,7 +101,7 @@ def main():
     config = carregar_config()  # usa 'config.json'
     id_unidade = config.get("id_unidade", "ut-foxtrot").lower()
     rsa_priv, rsa_pub, ecdsa_priv, ecdsa_pub = inicializar_chaves(config)
-    gerenciador = Chaveiro(config.get("arquivo_chaves", "chaves_confiaveis.json"))
+    gerenciador = Chaveiro(config.get("arquivo_chaves"))
     unidades_revogadas = set()
 
     gerenciador.atualizar("oraculo", ORACULO_RSA_PUB, ORACULO_ECDSA_PUB)

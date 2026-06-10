@@ -1,48 +1,22 @@
 import json
 import time
-import os
 from datetime import datetime
 import paho.mqtt.client as mqtt
 from chaves import load_rsa_pub_key, pub_para_b64
 from chaveiro import *
 from empacotador import *
-
-# pasta de logs para mensagens recebidas/enviadas
-LOG_DIR = "logs"
-if not os.path.exists(LOG_DIR):
-    os.makedirs(LOG_DIR)
-
-def salvar_mensagem_enviada(topico, mensagem):
-    """Registra em arquivo todas as mensagens que este cliente envia."""
-    try:
-        arquivo = os.path.join(LOG_DIR, "enviadas_mensagens.txt")
-        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        with open(arquivo, "a", encoding="utf-8") as f:
-            f.write(f"[{ts}] Tópico: {topico}\n")
-            f.write(f"Mensagem: {mensagem}\n")
-            f.write("-" * 80 + "\n")
-    except Exception:
-        pass
-
-LOG_DIR = "logs"
-if not os.path.exists(LOG_DIR):
-    os.makedirs(LOG_DIR)
+from seguranca import (
+    log_operacao,
+    log_warning,
+    log_error,
+    log_mensagem_enviada,
+    log_mensagem_recebida,
+)
 
 TOPIC_CHAVES = "sisdef/broadcast/chaves/{id}"
 TOPIC_DIRETO = "sisdef/direto/{id}"
 TOPIC_REVOGACAO = "sisdef/broadcast/revogacao"
 TOPIC_ORACULO = "sisdef/direto/oraculo"
-
-def salvar_mensagem_log(topico, mensagem):
-    try:
-        arquivo_log = os.path.join(LOG_DIR, "todas_mensagens.txt")
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        with open(arquivo_log, "a", encoding="utf-8") as f:
-            f.write(f"[{timestamp}] Tópico: {topico}\n")
-            f.write(f"Mensagem: {mensagem}\n")
-            f.write("-" * 80 + "\n")
-    except Exception as e:
-        print(f"Erro ao salvar mensagem no log: {str(e)}")
 
 class ClienteMQTT:
     def __init__(self, id_unidade, rsa_priv, rsa_pub, ecdsa_priv, ecdsa_pub, gerenciador, unidades_revogadas, config):
@@ -82,19 +56,25 @@ class ClienteMQTT:
             client.subscribe(topico_direto)
             client.subscribe(TOPIC_REVOGACAO)
             client.subscribe("sisdef/broadcast/notas")
+            log_operacao(
+                "MQTT.connect",
+                detalhes=f"id_unidade={self.id_unidade} broker_subscriptions={topico_direto},sisdef/broadcast/chaves/+,sisdef/broadcast/notas,{TOPIC_REVOGACAO}"
+            )
 
     def _on_message(self, client, userdata, msg):
         try:
             topico = msg.topic
             mensagem = msg.payload.decode()
-            salvar_mensagem_log(topico, mensagem)
+            log_mensagem_recebida(topico, mensagem)
+            log_operacao("MQTT.mensagem.recebida", detalhes=f"topico={topico} tamanho={len(mensagem)}")
             if topico.startswith("sisdef/broadcast/chaves/"):
                 self._processar_chave_iff(topico, mensagem)
             elif topico == TOPIC_REVOGACAO:
                 self._processar_revogacao(mensagem)
             elif topico == TOPIC_DIRETO.format(id=self.id_unidade):
                 self._processar_mensagem_segura(mensagem)
-        except Exception:
+        except Exception as erro:
+            log_warning(f"MQTT.mensagem.recebida | erro | {erro}")
             pass
 
     def _on_disconnect(self, client, userdata, rc):
@@ -110,25 +90,26 @@ class ClienteMQTT:
             "chave_publica_eddsa": pub_para_b64(self.ecdsa_pub)
         }
         topico = TOPIC_CHAVES.format(id=self.id_unidade)
-        # registrar mensagem enviada
-        try:
-            salvar_mensagem_enviada(topico, json.dumps(payload))
-        except Exception:
-            pass
+        log_mensagem_enviada(topico, json.dumps(payload))
         self._client.publish(topico, json.dumps(payload), retain=True)
+        log_operacao("MQTT.publicar_chaves", detalhes=f"topico={topico} id_unidade={self.id_unidade}")
 
     def _processar_chave_iff(self, topico, payload_str):
         try:
             dados = json.loads(payload_str)
             id_ut = dados.get("id_unidade", "").lower()
             if not id_ut:
+                log_warning("Chave_iff.processar | mensagem sem id_unidade")
                 return
             if id_ut in self.unidades_revogadas:
+                log_warning(f"Chave_iff.processar | unidade revogada descartada | id_unidade={id_ut}")
                 return
             chave_ecdsa = dados.get("chave_publica_ecdsa") or dados.get("chave_publica_eddsa")
             if chave_ecdsa:
                 self.gerenciador.atualizar(id_ut, dados["chave_publica_rsa"], chave_ecdsa)
-        except Exception:
+                log_operacao("Chave_iff.processar", detalhes=f"id_unidade={id_ut}")
+        except Exception as erro:
+            log_warning(f"Chave_iff.processar | erro | {erro}")
             pass
 
     def enviar_mensagem(self, destinatario, conteudo):
@@ -139,128 +120,136 @@ class ClienteMQTT:
             return self._enviar_echo_oraculo()
         info_dest = self.gerenciador.obter(dest_id)
         if not info_dest:
+            log_warning(f"Enviar_mensagem | destinatário desconhecido | destinatario={dest_id}")
             return False
         if dest_id in self.unidades_revogadas:
+            log_warning(f"Enviar_mensagem | destinatário revogado | destinatario={dest_id}")
             return False
         try:
             rsa_pub_dest = load_rsa_pub_key(info_dest["chave_publica_rsa"])
             plaintext = conteudo.encode("utf-8")
             pacote = montar_pacote_seguro(plaintext, self.id_unidade, rsa_pub_dest, self.ecdsa_priv)
             topico = TOPIC_DIRETO.format(id=dest_id)
-            try:
-                salvar_mensagem_enviada(topico, json.dumps(pacote))
-            except Exception:
-                pass
+            log_mensagem_enviada(topico, json.dumps(pacote))
             self._client.publish(topico, json.dumps(pacote))
+            log_operacao("MQTT.enviar_mensagem", detalhes=f"destinatario={dest_id} id_unidade={self.id_unidade}")
             return True
-        except Exception:
+        except Exception as erro:
+            log_warning(f"MQTT.enviar_mensagem | erro | destinatario={dest_id} erro={erro}")
             return False
 
     def _enviar_echo_oraculo(self):
         payload = {"id_unidade": self.id_unidade, "cmd": "echo"}
-        try:
-            salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
-        except Exception:
-            pass
+        log_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
         self._client.publish(TOPIC_ORACULO, json.dumps(payload))
+        log_operacao("MQTT.enviar_echo_oraculo", detalhes=f"id_unidade={self.id_unidade}")
         return True
 
     def solicitar_desafio_oraculo(self):
         if not self.conectado:
             print("Erro: Não conectado ao broker MQTT.")
+            log_warning("Solicitar_desafio_oraculo | falha | desconectado")
             return False
         payload = {"id_unidade": self.id_unidade, "cmd": "desafio"}
-        try:
-            salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
-        except Exception:
-            pass
+        log_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
         self._client.publish(TOPIC_ORACULO, json.dumps(payload))
+        log_operacao("MQTT.solicitar_desafio_oraculo", detalhes=f"id_unidade={self.id_unidade}")
         print("Solicitação de desafio enviada ao Oráculo!")
         return True
 
     def _processar_mensagem_segura(self, payload_str):
         try:
             pacote = json.loads(payload_str)
-        except Exception:
+        except Exception as erro:
+            log_warning(f"Processar_mensagem_segura | inválido | erro_json={erro}")
             return
         plaintext = validar_pacote(pacote, self.rsa_priv, self.gerenciador.todas(), self.unidades_revogadas)
+        
+        try:
+            id_unidade = pacote["id_unidade"]
+        except Exception:
+            log_warning("Processar_mensagem_segura | inválido | id_unidade ausente")
+            return
+        
         if plaintext is not None:
-            id_unidade = pacote.get("id_unidade", "?")
+            log_operacao("Processar_mensagem_segura", detalhes=f"id_unidade={id_unidade}")
             print(f"\n Mensagem válida de {id_unidade}")
             print(plaintext.decode("utf-8", errors="replace"))
         else:
-            id_unidade = pacote.get("id_unidade", "desconhecido")
+            log_warning(f"Processar_mensagem_segura | inválido | id_unidade={id_unidade}")
             self._reportar_erro_oraculo(f"Mensagem inválida de {id_unidade}")
 
     def _reportar_erro_oraculo(self, motivo):
         info_oraculo = self.gerenciador.obter("oraculo")
         if not info_oraculo:
+            log_warning("Reportar_erro_oraculo | oraculo não encontrado")
             return
         try:
             rsa_pub_oraculo = load_rsa_pub_key(info_oraculo["chave_publica_rsa"])
             pacote = montar_pacote_seguro(motivo.encode("utf-8"), self.id_unidade, rsa_pub_oraculo, self.ecdsa_priv)
-            try:
-                salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(pacote))
-            except Exception:
-                pass
+            log_mensagem_enviada(TOPIC_ORACULO, json.dumps(pacote))
             self._client.publish(TOPIC_ORACULO, json.dumps(pacote))
-        except Exception:
+            log_operacao("Reportar_erro_oraculo", detalhes=f"motivo={motivo}")
+        except Exception as erro:
+            log_warning(f"Reportar_erro_oraculo | erro | {erro}")
             pass
 
     def publicar_revogacao(self, unidade):
         if not self.conectado:
+            log_warning(f"Publicar_revogacao | falha | desconectado unidade={unidade}")
             return False
         try:
             pacote = montar_pacote_revogacao(unidade, self.id_unidade, self.ecdsa_priv)
-            try:
-                salvar_mensagem_enviada(TOPIC_REVOGACAO, json.dumps(pacote))
-            except Exception:
-                pass
+            log_mensagem_enviada(TOPIC_REVOGACAO, json.dumps(pacote))
             self._client.publish(TOPIC_REVOGACAO, json.dumps(pacote))
+            log_operacao("MQTT.publicar_revogacao", detalhes=f"unidade={unidade} remetente={self.id_unidade}")
             return True
-        except Exception:
+        except Exception as erro:
+            log_warning(f"Publicar_revogacao | erro | unidade={unidade} erro={erro}")
             return False
 
     def _processar_revogacao(self, payload_str):
         try:
             pacote = json.loads(payload_str)
-        except Exception:
+        except Exception as erro:
+            log_warning(f"Processar_revogacao | JSON inválido | erro={erro}")
             return
         unidade_revogada = validar_revogacao(pacote, self.gerenciador.todas())
         if unidade_revogada:
             self.unidades_revogadas.add(unidade_revogada)
             self.gerenciador.revogar(unidade_revogada)
+            log_operacao("Processar_revogacao", detalhes=f"unidade_revogada={unidade_revogada}")
 
     def publicar_resposta_oraculo(self, conteudo):
         """Publica um pacote seguro para o oráculo contendo cmd:'resposta'."""
         if not self.conectado:
+            log_warning("Publicar_resposta_oraculo | falha | desconectado")
             return False
         info_oraculo = self.gerenciador.obter("oraculo")
         if not info_oraculo:
+            log_warning("Publicar_resposta_oraculo | falha | oraculo não encontrado")
             return False
         try:
             rsa_pub_oraculo = load_rsa_pub_key(info_oraculo["chave_publica_rsa"])
             plaintext = conteudo.encode("utf-8")
             pacote = montar_pacote_seguro(plaintext, self.id_unidade, rsa_pub_oraculo, self.ecdsa_priv)
             pacote["cmd"] = "resposta"
-            try:
-                salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(pacote))
-            except Exception:
-                pass
+            log_mensagem_enviada(TOPIC_ORACULO, json.dumps(pacote))
             self._client.publish(TOPIC_ORACULO, json.dumps(pacote))
+            log_operacao("MQTT.publicar_resposta_oraculo", detalhes=f"id_unidade={self.id_unidade}")
             return True
-        except Exception:
+        except Exception as erro:
+            log_warning(f"Publicar_resposta_oraculo | erro | {erro}")
             return False
         
     def atualizar_notas_oraculo(self):
         if not self.conectado:
             print("Erro: Não conectado ao broker MQTT.")
+            log_warning("Atualizar_notas_oraculo | falha | desconectado")
             return False
         payload = {"cmd": "atualizar_notas"}
-        try:
-            salvar_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
-        except Exception:
-            pass
+        log_mensagem_enviada(TOPIC_ORACULO, json.dumps(payload))
         self._client.publish(TOPIC_ORACULO, json.dumps(payload), retain=False)
+        log_operacao("MQTT.atualizar_notas_oraculo", detalhes=f"id_unidade={self.id_unidade}")
         print("Solicitação de atualização de notas enviada ao Oráculo!")
         return True

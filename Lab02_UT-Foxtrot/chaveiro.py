@@ -2,44 +2,45 @@ import json
 import os
 import threading
 from datetime import datetime, timezone
+from seguranca import log_operacao, log_warning
 
 class Chaveiro:
-    def __init__(self, arquivo="chaves_confiaveis.json"):
+    def __init__(self, arquivo):
         self.arquivo = arquivo
         self._lock = threading.Lock()
         self.chaves = self._carregar()
 
     def _carregar(self):
+        dados = {}
         if os.path.exists(self.arquivo):
-            try:
-                with open(self.arquivo, "r") as f:
-                    dados = json.load(f)
-                return dados
-            except Exception:
-                pass
-        return {}
+            with open(self.arquivo, "r") as f:
+                dados = json.load(f)
+        return dados
 
     def _salvar(self):
-        try:
-            with open(self.arquivo, "w") as f:
-                json.dump(self.chaves, f, indent=2)
-        except Exception:
-            pass
+        with open(self.arquivo, "w") as f:
+            json.dump(self.chaves, f, indent=2)
 
     def atualizar(self, id_unidade, chave_rsa_b64, chave_ecdsa_b64):
         with self._lock:
-            self.chaves[id_unidade.lower()] = {
+            uid = id_unidade.lower()
+            self.chaves[uid] = {
                 "chave_publica_rsa": chave_rsa_b64,
                 "chave_publica_ecdsa": chave_ecdsa_b64,
                 "ultima_atualizacao": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
             }
             self._salvar()
+            log_operacao("Chaveiro.atualizar", detalhes=f"id_unidade={uid}")
 
     def revogar(self, id_unidade):
         with self._lock:
-            if id_unidade.lower() in self.chaves:
-                del self.chaves[id_unidade.lower()]
+            uid = id_unidade.lower()
+            if uid in self.chaves:
+                del self.chaves[uid]
                 self._salvar()
+                log_operacao("Chaveiro.revogar", detalhes=f"id_unidade={uid}")
+            else:
+                log_warning(f"Chaveiro.revogar | unidade não encontrada | id_unidade={uid}")
 
     def obter(self, id_unidade):
         return self.chaves.get(id_unidade.lower())
